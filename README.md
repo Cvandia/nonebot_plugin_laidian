@@ -36,10 +36,12 @@ nb plugin install nonebot_plugin_laidian
 ```
 pip install nonebot-plugin-laidian
 ```
+</details>
+
+**提醒**
 
 此外还得安装[nonebot-plugin-guild-patch](https://github.com/mnixry/nonebot-plugin-guild-patch)以免导入时报错
 
-</details>
 
 ## ⚙️ 配置
 

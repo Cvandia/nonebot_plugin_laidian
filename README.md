@@ -16,7 +16,7 @@ _⭐基于Nonebot2的一款来点随机图的插件⭐_
 
 ## ⭐ 介绍
 
-基于大量的API，实现来点图片的发送
+基于大量的API，实现来点图片的发送,目前可通过[频道补丁](https://github.com/mnixry/nonebot-plugin-guild-patch)完成频道适配
 
 ## 💿 安装
 

@@ -1,3 +1,4 @@
+
 <div align="center">
 
 <a href="https://v2.nonebot.dev/store"><img src="https://v2.nonebot.dev/logo.png" width="180" height="180" alt="NoneBotPluginLogo"></a>
@@ -104,3 +105,8 @@ laidian_with = 10
 
 由于API不稳定，可能有时候掉线或者挂掉，有情况可联系作者
 >m1141538825@163.com
+
+## 🌙鸣谢
+__>[夏柔API](https://api.aa1.cn/)__
+__>[独角兽API](http://ovooa.com/)__
+__>[小歪API](https://api.ixiaowai.cn/)__

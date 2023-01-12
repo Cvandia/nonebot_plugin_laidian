@@ -112,3 +112,5 @@ __>[夏柔API](https://api.aa1.cn/)__
 __>[独角兽API](http://ovooa.com/)__
 
 __>[小歪API](https://api.ixiaowai.cn/)__
+
+__>[随机涩图API](https://img.jitsu.top/)__

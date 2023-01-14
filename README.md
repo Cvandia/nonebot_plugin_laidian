@@ -7,7 +7,7 @@
 
 <div align="center">
 
-# nonebot-plugin-nowtime
+# nonebot-plugin-laidian
 
 _⭐基于Nonebot2的一款来点随机图的插件⭐_
 

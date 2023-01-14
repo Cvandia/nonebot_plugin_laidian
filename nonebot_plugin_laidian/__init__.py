@@ -14,11 +14,12 @@ import requests
 import json
 import random
 
+
 miao = on_command("来点猫猫", aliases={"随机猫猫","来点喵咪","来个猫咪","随机猫咪","来个猫猫"}, block=True)
 erciyuan= on_command("来点二次元",aliases={'来张二次元','二次元'},block=True)
 bizhi= on_command("来点壁纸",aliases={'来张壁纸','壁纸'},block=True)
 help= on_command('来点帮助',aliases={'来点help'},block=True)
-maijia=on_command('买家秀', aliases={'来点买家秀','来张买家秀','tb买家秀'},block=True)
+maijia=on_regex(r"^(买家秀)\s?([x|✖️|×|X|*]?\d+[张|个|份]?)?",flags=I)
 bing=on_command('来点bing',aliases={'来张bing','随机bing图','随机必应图'},block=True)
 bizhi_er=on_command('来点二次元壁纸',aliases={'来张二次元壁纸','二次元壁纸'},block=True)
 setu = on_command('来点涩图',aliases={'来张涩图','来点色图','随机涩图','随机色图','随机p图','来点p图','来张p图'},block=False)
@@ -40,6 +41,7 @@ r18 = on_regex(r"^(秘密森林)\s?([x|✖️|×|X|*]?\d+[张|个|份]?)?",flags
 soutu = on_command('p搜图',aliases={'p站搜图'},block=False, priority=6)
 shua_vedio = on_command('刷视频',block=False,priority=6)
 
+
 @shua_vedio.handle()
 async def _():
     await shua_vedio.send(message='可可酱正在刷视频……',at_sender=True)
@@ -59,6 +61,7 @@ async def _():
         await shua_vedio.finish(message='可可酱出错了，格式不正确',at_sender=True)
 
 
+
 @soutu.handle()
 async def _(match:Matcher,args:Message = CommandArg()):
     args = str(args)#去除命令文字
@@ -66,6 +69,8 @@ async def _(match:Matcher,args:Message = CommandArg()):
         match.set_arg('keyword',args)
     else:
         await soutu.send(message='本搜索图源来自p站',at_sender=True)
+
+
 
 @soutu.got('keyword',prompt="请告诉可可酱关键词吧")
 async def got_keyword(bot:Bot, event:MessageEvent, keyword:Message = Arg()):
@@ -84,6 +89,8 @@ async def got_keyword(bot:Bot, event:MessageEvent, keyword:Message = Arg()):
             await soutu.finish(message=f'账户风控了或者图片格式错误:{e.__context__}')
 
 
+
+
 @r18.handle()
 async def _(state:T_State, bot:Bot, event:MessageEvent):
     await r18.send(message='触发神秘空间……',at_sender=True)
@@ -92,6 +99,7 @@ async def _(state:T_State, bot:Bot, event:MessageEvent):
     args = list(state["_matched_groups"])
     num = args[1]
     num = int(sub(r"[张|个|份|x|✖️|×|X|*]", "", num)) if num else 1
+    num = 7 if num >=7 else num
     json_get = requests.get(url=f"https://moe.jitsu.top/img/?sort=r18&size=original&type=json&num={num}").text
     json_get = json.loads(json_get)['pics']
     for key in json_get:
@@ -495,11 +503,17 @@ async def bz(bot:Bot, event:MessageEvent, state: T_State):
 
 @maijia.handle()
 async def mj(bot:Bot, event:MessageEvent, state: T_State):
-    await maijia.send(message='可可酱正在寻找买家秀……')
-    msg=await maijia_get()
+    msg_list:List[Message]=[]
+    msg_list.insert(0,'买家秀找到如下')
+    args = list(state["_matched_groups"])
+    num = args[1]
+    num = int(sub(r"[张|个|份|x|✖️|×|X|*]", "", num)) if num else 1
+    num = 7 if num >=7 else num
+    while num > 0:
+        num -=1
+        msg_list.append(MessageSegment.image((await maijia_get()).content))
     try:
-        msg_info = await maijia.send(MessageSegment.image(msg.content))
-        await maijia.send(message='找到了一张买家图，喏~',at_sender=True)
+        msg_info = await send_forward_msg(bot,event,"买家秀可可酱",bot.self_id,msg_list)
         add_withdraw_job(bot, **msg_info)
         await sleep(1)
     except:

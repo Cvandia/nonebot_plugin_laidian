@@ -22,7 +22,7 @@ help= on_command('来点帮助',aliases={'来点help'},block=True)
 maijia=on_regex(r"^(买家秀)\s?([x|✖️|×|X|*]?\d+[张|个|份]?)?",flags=I)
 bing=on_command('来点bing',aliases={'来张bing','随机bing图','随机必应图'},block=True)
 bizhi_er=on_command('来点二次元壁纸',aliases={'来张二次元壁纸','二次元壁纸'},block=True)
-setu = on_command('来点涩图',aliases={'来张涩图','来点色图','随机涩图','随机色图','随机p图','来点p图','来张p图'},block=False)
+setu = on_regex(r"^(来点p图)\s?([x|*]?\d+[张|个|份]?)?",flags=I)
 cos = on_command('来点cos',aliases={'cos','cos图','cosplay','来张cos'}, block=False, priority=5)
 douyin = on_command('来点抖音',aliases={'抖音','随机抖音','小姐姐'},priority=5)
 douyin2 = on_command('来点小姐',aliases={'woc','卧槽'}, block=False, priority=5)
@@ -409,31 +409,28 @@ async def get_ercibizhi():
 
 
 @setu.handle()
-async def p(bot:Bot, event:MessageEvent):
+async def p(state:T_State, bot:Bot, event:MessageEvent):
     await setu.send(message='可可酱正在寻找p图……')
     try:
-        get_json = requests.get(url='http://sex.nyan.xyz/api/v2/',timeout=60).text
+        args = list(state["_matched_groups"])
+        num = args[1]
+        num = int(sub(r"^[x|*]","",num)) if num else 1
+        get_json = requests.get(url=f"http://sex.nyan.xyz/api/v2/?num={num}",timeout=60).text
         get_json = json.loads(get_json)
-        date = get_json['data'][0]
-        url = date['url']
-        tags = date['tags'][0] +' '+ date['tags'][1] +' '+ date['tags'][2] + ' '+date['tags'][3]
+        msg_list:List[Message]=[]
+        date = get_json['data']
+        for key in date:
+            url = key['url']
+            tags = key['tags'][0] +' '+ key['tags'][1] +' '+ key['tags'][2] + ' '+key['tags'][3]
+            msg = tags + MessageSegment.image(url)
+            msg_list.append(msg)    
     except:
         await setu.finish(message='出错了，可可酱没有找到p图')
-    msg = tags + MessageSegment.image(url)
-    msg_list:List[Message]=[]
-    msg_list=msg_list[:3]
-    msg_list.insert(0,"可可酱提醒你，未经管理员允许，请勿转发")
-    msg_list.insert(1,msg)
-    msg_list.insert(2,f"原链接：{date['page']}")
-    faild_num = 0
     try:
         await send_forward_msg(bot, event, "可可酱", bot.self_id, msg_list)
     except ActionFailed as e:
-        logger.warning(e)
-        faild_num = 1
-    if faild_num == 1:
         await setu.finish(
-            message=Message(f"消息被风控，{faild_num} 个图发不出来了\n"),
+            message=Message(f"消息被风控，{e} "),
             at_sender=True,
         )
     await sleep(2)

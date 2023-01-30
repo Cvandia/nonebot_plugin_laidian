@@ -1,7 +1,6 @@
 from nonebot.plugin import on_command, on_regex
 from nonebot.exception import ActionFailed
 from nonebot.typing import T_State
-import nonebot
 from nonebot.adapters.onebot.v11 import (Message, 
     MessageSegment, 
     Bot,
@@ -15,6 +14,9 @@ from nonebot.params import Arg, CommandArg
 from asyncio import sleep
 from typing import List
 from re import sub, I
+from nonebot_plugin_imageutils import Text2Image,BuildImage
+from io import BytesIO
+import nonebot
 import httpx
 import requests
 import json
@@ -392,31 +394,36 @@ async def _(bot: Bot, event: MessageEvent, i=1):
 
 @help.handle()
 async def hp(bot: Bot, event: MessageEvent, state: T_State):
-    await help.finish(message=f"⭐{Bot_NICKNAME}一些来点图片的帮助⭐\n\
-🚪来点壁纸   🚪\n\
-🚪来点二次元 🚪\n\
-🚪来点猫猫   🚪\n\
-🚪来点买家秀 🚪\n\
-🚪来点bing   🚪\n\
-🚪来点二次元壁纸🚪\n\
-🚪来点p图    🚪\n\
-🚪来点cos    🚪\n\
-🚪来点抖音   🚪\n\
-🚪来点小姐姐 🚪\n\
-🚪来点女头   🚪\n\
-🚪来点原神壁纸🚪\n\
-🚪来点妹子   🚪\n\
-🚪胡言乱语   🚪\n\
-🚪算一卦     🚪\n\
-🚪壁纸合集   🚪\n\
-🚪语音点歌   🚪\n\
-🚪随机视频   🚪\n\
-🚪cos正片    🚪\n\
-🚪历史上的今天🚪\n\
-🚪随机二次元 🚪\n\
-🚪p搜图      🚪\n\
-🚪刷视频     🚪\n\
-⭐更多功能还待完善⭐\n")
+
+    image = f"⭐{Bot_NICKNAME}一些来点图片的帮助⭐\n\
+🚪来点壁纸      🚪\n\
+🚪来点二次元    🚪\n\
+🚪来点猫猫      🚪\n\
+🚪来点买家秀    🚪\n\
+🚪来点bing      🚪\n\
+🚪来点二次元壁纸 🚪\n\
+🚪来点p图       🚪\n\
+🚪来点cos       🚪\n\
+🚪来点抖音      🚪\n\
+🚪来点小姐姐    🚪\n\
+🚪来点女头      🚪\n\
+🚪来点原神壁纸  🚪\n\
+🚪来点妹子      🚪\n\
+🚪胡言乱语      🚪\n\
+🚪算一卦        🚪\n\
+🚪壁纸合集      🚪\n\
+🚪语音点歌      🚪\n\
+🚪随机视频      🚪\n\
+🚪cos正片       🚪\n\
+🚪历史上的今天  🚪\n\
+🚪随机二次元    🚪\n\
+🚪p搜图         🚪\n\
+🚪刷视频        🚪\n\
+⭐更多功能还待完善⭐\n"
+    image = Text2Image.from_text(image,30).to_image(bg_color="white")
+    output = BytesIO()
+    image.save(output,format="png")
+    await help.send(MessageSegment.image(output))
 
 
 async def get_ercibizhi():

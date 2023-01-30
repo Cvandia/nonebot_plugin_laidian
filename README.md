@@ -1,4 +1,5 @@
 
+
 <div align="center">
 
 <a href="https://v2.nonebot.dev/store"><img src="https://v2.nonebot.dev/logo.png" width="180" height="180" alt="NoneBotPluginLogo"></a>
@@ -52,8 +53,11 @@ pip install nonebot-plugin-laidian
 ```
 laidian_with = 10
 ```
-
 该选项是某些图片撤回时间（秒），不设置默认不撤回
+```
+Bot_NICKNAME = ""
+```
+bot的名字
 
 
 ## ⭐ 使用

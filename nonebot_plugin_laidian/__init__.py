@@ -52,7 +52,17 @@ suijierci = on_command('随机二次元', aliases={'ecy'}, block=False, priority
 r18 = on_regex(r"^(秘密森林)\s?([x|✖️|×|X|*]?\d+[张|个|份]?)?", flags=I, permission=PRIVATE_FRIEND | GROUP)
 soutu = on_command('p搜图', aliases={'p站搜图'}, block=False, priority=6)
 shua_vedio = on_command('刷视频', block=False, priority=6)
-
+tts = on_regex(r"^(tts)+(\s)?(.*)",flags=I)#tts文字转语音
+@tts.handle()
+async def _(bot:Bot,state:T_State,event:MessageEvent):
+    args = list(state["_matched_groups"])
+    text = args[2]
+    msg = f"[CQ:tts,text={text}]" if len(text) <= 50 else await tts.finish("超出50字符，默认取消")
+    if msg:
+        try:
+            await tts.send(Message(msg))
+        except Exception:
+            await tts.finish("tts转换出错了")
 
 @shua_vedio.handle()
 async def _():
@@ -419,8 +429,9 @@ async def hp(bot: Bot, event: MessageEvent, state: T_State):
 🚪随机二次元    🚪\n\
 🚪p搜图         🚪\n\
 🚪刷视频        🚪\n\
+🚪tts          🚪\n\
 ⭐更多功能还待完善⭐\n"
-    image = Text2Image.from_text(image,30).to_image(bg_color="white")
+    image = Text2Image.from_text(image,30,fontname="FZSJ-QINGCRJ.ttf").to_image(bg_color="white")
     output = BytesIO()
     image.save(output,format="png")
     await help.send(MessageSegment.image(output))
@@ -435,29 +446,38 @@ async def get_ercibizhi():
 @setu.handle()
 async def p(state: T_State, bot: Bot, event: MessageEvent):
     await setu.send(message=f'{Bot_NICKNAME}正在寻找p图……')
-    try:
-        args = list(state["_matched_groups"])
-        num = args[1]
-        num = int(sub(r"^[x|*]", "", num)) if num else 1
-        get_json = requests.get(url=f"http://sex.nyan.xyz/api/v2/?num={num}", timeout=60).text
-        get_json = json.loads(get_json)
-        msg_list: List[Message] = []
-        date = get_json['data']
+    args = list(state["_matched_groups"])
+    num = args[1]
+    num = int(sub(r"^[x|*]", "", num)) if num else 2
+    num = 5 if num >= 5 else num
+    msg_list: List[Message] = []
+    get_json = requests.get(url=f"http://sex.nyan.xyz/api/v2/?num={num}", timeout=60).text
+    get_json = json.loads(get_json)
+    date = get_json['data']
+    if date:
         for key in date:
             url = key['url']
             tags = key['tags'][0] + ' ' + key['tags'][1] + ' ' + key['tags'][2] + ' ' + key['tags'][3]
             msg = tags + MessageSegment.image(url)
             msg_list.append(msg)
-    except:
-        await setu.finish(message=f'出错了，{Bot_NICKNAME}没有找到p图')
-    try:
-        await send_forward_msg(bot, event, f"{Bot_NICKNAME}", bot.self_id, msg_list)
-    except ActionFailed as e:
-        await setu.finish(
+        try:
+            await send_forward_msg(bot, event, f"{event.sender.nickname or event.sender.card}", event.user_id, msg_list)
+        except Exception: await setu.send("消息图片被风控了！")
+    else:
+        await setu.send("API寄了，正在切换API")
+        get_ = requests.get(url=f"https://moe.jitsu.top/img/?sort=pixiv&num={num}", timeout=60).text
+        get_ = json.loads(get_)
+        dat = get_['pics']
+        for key in dat:
+            msg_list.append(MessageSegment.image(key))
+        try:
+            await send_forward_msg(bot, event, f"{Bot_NICKNAME}", bot.self_id, msg_list)
+        except ActionFailed as e:
+            await setu.finish(
             message=Message(f"消息被风控，{e} "),
             at_sender=True,
-        )
-    await sleep(2)
+            )
+        await sleep(2)
 
 
 async def get_miao():

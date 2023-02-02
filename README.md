@@ -3,12 +3,13 @@
 <div align="center">
 
 <a href="https://v2.nonebot.dev/store"><img src="https://v2.nonebot.dev/logo.png" width="180" height="180" alt="NoneBotPluginLogo"></a>
-
+# nonebot-plugin-laidian
+<div align="center">
 </div>
 
 <div align="center">
-
-# nonebot-plugin-laidian
+<a href="https://www.python.org/downloads/release/python-390/"><img src="https://img.shields.io/badge/python-3.8+-blue"></a>  <a href=""><img src="https://img.shields.io/badge/QQ-1141538825-yellow"></a> <a href=""><img src="https://img.shields.io/badge/license-MIT-blue"></a>
+</div>
 
 _⭐基于Nonebot2的一款来点随机图的插件⭐_
 

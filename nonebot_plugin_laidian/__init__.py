@@ -461,7 +461,7 @@ async def p(state: T_State, bot: Bot, event: MessageEvent):
             msg = tags + MessageSegment.image(url)
             msg_list.append(msg)
         try:
-            await send_forward_msg(bot, event, f"{event.sender.nickname or event.sender.card}", event.user_id, msg_list)
+            await send_forward_msg(bot, event, f"{Bot_NICKNAME}", bot.self_id, msg_list)
         except Exception: await setu.send("消息图片被风控了！")
     else:
         await setu.send("API寄了，正在切换API")

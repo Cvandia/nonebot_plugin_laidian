@@ -8,7 +8,7 @@
 </div>
 
 <div align="center">
-<a href="https://www.python.org/downloads/release/python-390/"><img src="https://img.shields.io/badge/python-3.8+-blue"></a>  <a href=""><img src="https://img.shields.io/badge/QQ-1141538825-yellow"></a> <a href=""><img src="https://img.shields.io/badge/license-MIT-blue"></a> <a href="https://v2.nonebot.dev/"><img src="https://img.shields.io/badge/Nonebot2-rc1+-red"></a>
+<a href="https://www.python.org/downloads/release/python-390/"><img src="https://img.shields.io/badge/python-3.8+-blue"></a>  <a href=""><img src="https://img.shields.io/badge/QQ-1141538825-yellow"></a> <a href="https://github.com/Cvandia/nonebot_plugin_laidian/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue"></a> <a href="https://v2.nonebot.dev/"><img src="https://img.shields.io/badge/Nonebot2-rc1+-red"></a>
 </div>
 
 _⭐基于Nonebot2的一款来点随机图的插件⭐_
@@ -19,7 +19,7 @@ _⭐基于Nonebot2的一款来点随机图的插件⭐_
 
 ## ⭐ 介绍
 
-基于大量的API，实现来点图片的发送,目前可通过[频道补丁](https://github.com/mnixry/nonebot-plugin-guild-patch)完成QQ频道适配
+基于大量的API，实现来点图片的发送
 >别看了，这里什么都没有@_@
 
 ## 💿 安装

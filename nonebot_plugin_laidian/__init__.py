@@ -31,7 +31,7 @@ miao = on_command("来点猫猫", aliases={"随机猫猫", "来点喵咪", "来�
 erciyuan = on_command("来点二次元", aliases={'来张二次元', '二次元'}, block=True)
 bizhi = on_command("来点壁纸", aliases={'来张壁纸', '壁纸'}, block=True)
 help = on_command('来点帮助', aliases={'来点help'}, block=True)
-maijia = on_regex(r"^(买家秀)\s?([x|✖️|×|X|*]?\d+[张|个|份]?)?", flags=I)
+maijia = on_regex(r"^(来点买家秀)\s?([x|✖️|×|X|*]?\d+[张|个|份]?)?", flags=I)
 bing = on_command('来点bing', aliases={'来张bing', '随机bing图', '随机必应图'}, block=True)
 bizhi_er = on_command('来点二次元壁纸', aliases={'来张二次元壁纸', '二次元壁纸'}, block=True)
 setu = on_regex(r"^(来点p图)\s?([x|*]?\d+[张|个|份]?)?", flags=I)
@@ -104,7 +104,7 @@ async def got_keyword(bot: Bot, event: MessageEvent, keyword: Message = Arg()):
         except:
             await soutu.send(message=f'请求超时了，或者你输入的关键词不符合规范:{keyword}', at_sender=True)
         try:
-            await send_forward_msg(bot, event, f'搜图{Bot_NICKNAME}', bot.self_id, msg_list)
+            await send_forward_msg(bot, event, f'搜图{Bot_NICKNAME}', 2854196306, msg_list)
         except ActionFailed as e:
             await soutu.finish(message=f'账户风控了或者图片格式错误:{e.__context__}')
 
@@ -123,7 +123,7 @@ async def _(state: T_State, bot: Bot, event: MessageEvent):
     for key in json_get:
         msg_list.append(MessageSegment.image(key))
     try:
-        msg_info = await send_forward_msg(bot, event, "未知领域", bot.self_id, msg_list)
+        msg_info = await send_forward_msg(bot, event, "未知领域", 2854196306, msg_list)
         add_withdraw_job(bot, **msg_info)
     except:
         await r18.finish(message='出错了或者账户风控了', at_sender=True)
@@ -139,7 +139,7 @@ async def _(bot: Bot, event: MessageEvent):
     for key in json_get:
         msg_list.append(MessageSegment.image(key))
     try:
-        await send_forward_msg(bot, event, f"二次元{Bot_NICKNAME}", bot.self_id, msg_list)
+        await send_forward_msg(bot, event, f"二次元{Bot_NICKNAME}", 2854196306, msg_list)
     except:
         await suijierci.finish(message='出错了或者账户风控了', at_sender=True)
 
@@ -167,7 +167,7 @@ async def _(bot: Bot, event: MessageEvent):
     except:
         await zcos.send(message='超出数据范围，请重新发送')
     try:
-        await send_forward_msg(bot, event, f"{Bot_NICKNAME}", bot.self_id, msg_list)
+        await send_forward_msg(bot, event, f"{Bot_NICKNAME}", 2854196306, msg_list)
     except ActionFailed as e:
         await zcos.finish(message='出错了或者账户风控了', at_sender=True)
 
@@ -397,7 +397,7 @@ async def _(bot: Bot, event: MessageEvent, i=1):
         msg_list.append(MessageSegment.image(file=(img.replace('\n', ''))))
         await sleep(0.5)
     try:
-        await send_forward_msg(bot, event, f"cos{Bot_NICKNAME}", bot.self_id, msg_list)
+        await send_forward_msg(bot, event, f"cos{Bot_NICKNAME}", 2854196306, msg_list)
     except ActionFailed as e:
         await cos.finish(message='账户风控了，或格式出错了', at_sender=True)
 
@@ -461,7 +461,7 @@ async def p(state: T_State, bot: Bot, event: MessageEvent):
             msg = tags + MessageSegment.image(url)
             msg_list.append(msg)
         try:
-            await send_forward_msg(bot, event, f"{Bot_NICKNAME}", bot.self_id, msg_list)
+            await send_forward_msg(bot, event, f"{Bot_NICKNAME}", 2854196306, msg_list)
         except Exception: await setu.send("消息图片被风控了！")
     else:
         await setu.send("API寄了，正在切换API")
@@ -471,7 +471,7 @@ async def p(state: T_State, bot: Bot, event: MessageEvent):
         for key in dat:
             msg_list.append(MessageSegment.image(key))
         try:
-            await send_forward_msg(bot, event, f"{Bot_NICKNAME}", bot.self_id, msg_list)
+            await send_forward_msg(bot, event, f"{event.sender.nickname or event.sender.card}", 2854196306, msg_list)
         except ActionFailed as e:
             await setu.finish(
             message=Message(f"消息被风控，{e} "),
@@ -555,10 +555,8 @@ async def mj(bot: Bot, event: MessageEvent, state: T_State):
         num -= 1
         msg_list.append(MessageSegment.image((await maijia_get()).content))
     try:
-        msg_info = await send_forward_msg(bot, event, f"买家秀{Bot_NICKNAME}", bot.self_id, msg_list)
-        add_withdraw_job(bot, **msg_info)
-        await sleep(1)
-    except:
+        await send_forward_msg(bot, event, f"买家秀{Bot_NICKNAME}", 2854196306, msg_list)
+    except Exception:
         await maijia.finish(message=f'请求超时了，{Bot_NICKNAME}没有找到图片')
 
 

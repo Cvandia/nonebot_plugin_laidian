@@ -30,6 +30,7 @@ _⭐基于Nonebot2的一款来点随机图的插件⭐_
 在项目目录文件下运行
 
 ```
+（暂未更新）
 nb plugin install nonebot_plugin_laidian
 ```
 </details>
@@ -38,7 +39,15 @@ nb plugin install nonebot_plugin_laidian
 <summary>pip安装</summary>
 
 ```
+（暂未更新）
 pip install nonebot-plugin-laidian
+```
+</details>
+<details>
+<summary>git</summary>
+
+```
+git clone https://github.com/Cvandia/nonebot_plugin_laidian
 ```
 </details>
 

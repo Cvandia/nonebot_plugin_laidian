@@ -10,11 +10,13 @@ from nonebot.adapters.onebot.v11 import (Message,
     GROUP)
 from .withdraw import add_withdraw_job
 from nonebot.matcher import Matcher
+from nonebot import require
 from nonebot.params import Arg, CommandArg
 from asyncio import sleep
 from typing import List
 from re import sub, I
-from nonebot_plugin_imageutils import Text2Image,BuildImage
+require("nonebot_plugin_imageutils")
+from nonebot_plugin_imageutils import Text2Image
 from io import BytesIO
 import nonebot
 import httpx
@@ -37,7 +39,7 @@ bizhi_er = on_command('来点二次元壁纸', aliases={'来张二次元壁纸',
 setu = on_regex(r"^(来点p图)\s?([x|*]?\d+[张|个|份]?)?", flags=I)
 cos = on_command('来点cos', aliases={'cos', 'cos图', 'cosplay', '来张cos'}, block=False, priority=5)
 douyin = on_command('来点抖音', aliases={'抖音', '随机抖音', '小姐姐'}, priority=5)
-douyin2 = on_command('来点小姐', aliases={'woc', '卧槽'}, block=False, priority=5)
+douyin2 = on_command('来点小姐姐', aliases={'woc'}, block=False, priority=5)
 touxiang = on_command('来点女头', aliases={'女生头像', '随机女头'}, block=False, priority=5)
 yuanshen = on_command('原神壁纸', aliases={'来点原神壁纸'}, block=False, priority=5)
 meizi = on_command('来点妹子', aliases={'来点腿子', '美腿'}, block=False, priority=5)
@@ -53,6 +55,29 @@ r18 = on_regex(r"^(秘密森林)\s?([x|✖️|×|X|*]?\d+[张|个|份]?)?", flag
 soutu = on_command('p搜图', aliases={'p站搜图'}, block=False, priority=6)
 shua_vedio = on_command('刷视频', block=False, priority=6)
 tts = on_regex(r"^(tts)+(\s)?(.*)",flags=I)#tts文字转语音
+handsome = on_regex(r"^来点(帅哥|(小)?哥哥)(短)?(视频)?$",flags=I,priority=5)
+beauty = on_regex(r"^来点(美女|姐姐)(短)?(视频)?$",flags=I,priority=5)
+@beauty.handle()
+async def _():
+    vedio = requests.get(url="https://zj.v.api.aa1.cn/api/video_dyv2").text
+    if not vedio:
+        await beauty.finish("接口寄了")
+    vedio_url= json.loads(vedio)['url']
+    await beauty.send("稍等片刻，请勿重复指令")
+    await handsome.finish(MessageSegment.video(vedio_url))
+
+@handsome.handle()
+async def _():
+    vedio = requests.get(url="https://zj.v.api.aa1.cn/api/video_dyv1").text
+    if not vedio:
+        await handsome.finish("接口寄了")
+    vedio_url = json.loads(vedio)['url']
+    await handsome.send("稍等片刻，请勿重复指令")
+    await handsome.finish(MessageSegment.video(vedio_url))
+
+
+
+
 @tts.handle()
 async def _(bot:Bot,state:T_State,event:MessageEvent):
     args = list(state["_matched_groups"])
@@ -430,8 +455,10 @@ async def hp(bot: Bot, event: MessageEvent, state: T_State):
 🚪p搜图         🚪\n\
 🚪刷视频        🚪\n\
 🚪tts          🚪\n\
+🚪来点帅哥          🚪\n\
+🚪来点美女          🚪\n\
 ⭐更多功能还待完善⭐\n"
-    image = Text2Image.from_text(image,30,fontname="FZSJ-QINGCRJ.ttf").to_image(bg_color="white")
+    image = Text2Image.from_text(image,30).to_image(bg_color="white")
     output = BytesIO()
     image.save(output,format="png")
     await help.send(MessageSegment.image(output))

@@ -30,6 +30,7 @@ _⭐基于Nonebot2的一款来点随机图的插件⭐_
 在项目目录文件下运行
 
 ```
+（暂未更新）
 nb plugin install nonebot_plugin_laidian
 ```
 </details>
@@ -38,7 +39,17 @@ nb plugin install nonebot_plugin_laidian
 <summary>pip安装</summary>
 
 ```
+（暂未更新）
 pip install nonebot-plugin-laidian
+```
+</details>
+<details>
+<summary>git</summary>
+
+一般是在```src/plugins```下
+
+```
+git clone https://github.com/Cvandia/nonebot_plugin_laidian
 ```
 </details>
 
@@ -92,6 +103,9 @@ bot的名字
 🚪随机二次元
 🚪p搜图   
 🚪刷视频     
+🚪tts
+🚪来点帅哥         
+🚪来点美女          
 ```    
 **注意**
 
@@ -108,7 +122,7 @@ bot的名字
 ## ⭐问题
 
 由于API不稳定，可能有时候掉线或者挂掉，有情况可联系作者
->m1141538825@163.com
+>1141538825@qq.com
 
 ## 🌙鸣谢
 __>[夏柔API](https://api.aa1.cn/)__

@@ -10,18 +10,21 @@ from nonebot.adapters.onebot.v11 import (Message,
     GROUP)
 from .withdraw import add_withdraw_job
 from nonebot.matcher import Matcher
-from nonebot import require
 from nonebot.params import Arg, CommandArg
 from asyncio import sleep
+from nonebot import require
 from typing import List
 from re import sub, I
 require("nonebot_plugin_imageutils")
-from nonebot_plugin_imageutils import Text2Image
+from nonebot_plugin_imageutils import Text2Image,BuildImage
 from io import BytesIO
 import nonebot
 import httpx
 import requests
-import json
+try:
+    import ujson as json
+except ImportError:
+    import json
 import random
 
 #获取配置
@@ -57,6 +60,38 @@ shua_vedio = on_command('刷视频', block=False, priority=6)
 tts = on_regex(r"^(tts)+(\s)?(.*)",flags=I)#tts文字转语音
 handsome = on_regex(r"^来点(帅哥|(小)?哥哥)(短)?(视频)?$",flags=I,priority=5)
 beauty = on_regex(r"^来点(美女|姐姐)(短)?(视频)?$",flags=I,priority=5)
+pic_search = on_regex(r"^来点图片(.*)?")
+
+
+@pic_search.handle()
+async def got_msg(state:T_State,matcher:Matcher):
+    args = list(state["_matched_groups"])
+    msg = args[0]
+    if msg:
+        matcher.set_arg("msg",msg)
+        
+@pic_search.got("msg",prompt=f"请把关键词告诉{Bot_NICKNAME}吧")
+async def send_pic(bot:Bot,event:MessageEvent,state:T_State,msg:Message = Arg()):
+    url = "https://ovooa.com/API/duitangtu/api.php?msg="+str(msg)+"&n=1"
+    try:
+        response = httpx.get(url=url).text
+    except TimeoutError:
+        response = None
+        await pic_search.finish("接口寄了")
+    code = json.loads(response)['code']
+    if str(code) == "-5":
+        await pic_search.finish(f"没有找到:{msg} 有关的图片")
+    if str(code) == "1":
+        msg_list = [f"{Bot_NICKNAME}找到了一些关于{msg}的图片"]
+        data = json.loads(response)['data']
+        for key in data:
+            msg_list.append(MessageSegment.image(key['Url']))
+        try:
+            await send_forward_msg(bot,event,"图来了",2854196306,msg_list)
+        except ActionFailed:
+            await pic_search.finish("消息风控了")
+            
+            
 @beauty.handle()
 async def _():
     vedio = requests.get(url="https://zj.v.api.aa1.cn/api/video_dyv2").text
@@ -431,6 +466,7 @@ async def _(bot: Bot, event: MessageEvent, i=1):
 async def hp(bot: Bot, event: MessageEvent, state: T_State):
 
     image = f"⭐{Bot_NICKNAME}一些来点图片的帮助⭐\n\
+🚪来点图片      🚪\n\
 🚪来点壁纸      🚪\n\
 🚪来点二次元    🚪\n\
 🚪来点猫猫      🚪\n\
@@ -458,7 +494,7 @@ async def hp(bot: Bot, event: MessageEvent, state: T_State):
 🚪来点帅哥          🚪\n\
 🚪来点美女          🚪\n\
 ⭐更多功能还待完善⭐\n"
-    image = Text2Image.from_text(image,30).to_image(bg_color="white")
+    image = Text2Image.from_text(image,30,fontname="FZSJ-QINGCRJ.ttf").to_image(bg_color="white")
     output = BytesIO()
     image.save(output,format="png")
     await help.send(MessageSegment.image(output))

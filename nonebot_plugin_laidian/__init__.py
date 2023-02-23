@@ -61,6 +61,36 @@ tts = on_regex(r"^(tts)+(\s)?(.*)",flags=I)#tts文字转语音
 handsome = on_regex(r"^来点(帅哥|(小)?哥哥)(短)?(视频)?$",flags=I,priority=5)
 beauty = on_regex(r"^来点(美女|姐姐)(短)?(视频)?$",flags=I,priority=5)
 pic_search = on_regex(r"^来点图片(.*)?")
+heisi = on_regex(r"^来点(黑丝|白丝)$",flags=I)
+kunkun = on_regex(r"^来点坤(坤)?(音)?乐$",flags=I)
+
+
+@kunkun.handle()
+async def _():
+    url = "http://api.caonm.net/api/kunkun/k.php"
+    try:
+        await kunkun.send(MessageSegment.record(magic=True,url=url))
+    except ActionFailed:
+        await kunkun.finish("接口寄了")
+
+
+@heisi.handle()
+async def send_heisi(state:T_State):
+    args = list(state["_matched_groups"])
+    type = args[0]
+    url = "http://api.caonm.net/api/bhs/b.php"
+    if str(type) == "白丝":
+        try:
+            await heisi.send(MessageSegment.image(url))
+        except ActionFailed:
+            await heisi.finish("接口寄了")
+    else:
+        url = "http://api.caonm.net/api/bhs/h.php"
+        try:
+            await heisi.send(MessageSegment.image(url))
+        except ActionFailed:
+            await heisi.finish("接口寄了")
+
 
 
 @pic_search.handle()
@@ -478,6 +508,8 @@ async def hp(bot: Bot, event: MessageEvent, state: T_State):
 🚪来点抖音      🚪\n\
 🚪来点小姐姐    🚪\n\
 🚪来点女头      🚪\n\
+🚪来点坤乐      🚪\n\
+🚪来点(黑,白)丝 🚪\n\
 🚪来点原神壁纸  🚪\n\
 🚪来点妹子      🚪\n\
 🚪胡言乱语      🚪\n\
@@ -491,8 +523,8 @@ async def hp(bot: Bot, event: MessageEvent, state: T_State):
 🚪p搜图         🚪\n\
 🚪刷视频        🚪\n\
 🚪tts          🚪\n\
-🚪来点帅哥          🚪\n\
-🚪来点美女          🚪\n\
+🚪来点帅哥     🚪\n\
+🚪来点美女     🚪\n\
 ⭐更多功能还待完善⭐\n"
     image = Text2Image.from_text(image,30,fontname="FZSJ-QINGCRJ.ttf").to_image(bg_color="white")
     output = BytesIO()
